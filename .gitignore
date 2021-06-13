@@ -1,0 +1,8 @@
+# IDEs:
+.idea/
+.vs/
+.vscode/
+
+# Local:
+.ipynb_checkpoints/
+
