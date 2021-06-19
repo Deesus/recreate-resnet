@@ -108,7 +108,7 @@ train_generator = datagen.flow(
 
 
 # + execution={"iopub.execute_input": "2021-06-13T15:50:14.790258Z", "iopub.status.busy": "2021-06-13T15:50:14.789927Z", "iopub.status.idle": "2021-06-13T15:50:14.803490Z", "shell.execute_reply": "2021-06-13T15:50:14.802662Z", "shell.execute_reply.started": "2021-06-13T15:50:14.790229Z"}
-def identity_block(input_tensor, kernel_size, num_filters, stage_label, block_label):
+def identity_block(input_tensor, kernel_size, num_filters, stage_label, block_label, print_dimensions=True):
     """ Standard block in ResNet -- corresponds to when input activation (e.g. a[l]) has same dimension as output activation
         a[l+2].
         
@@ -129,15 +129,21 @@ def identity_block(input_tensor, kernel_size, num_filters, stage_label, block_la
     
     x = Conv2D(num_filters_3, (1, 1), padding='valid', name=CONV_BASE_NAME+'c')(x)
     x = BatchNormalization(axis=-1, name=BATCH_NORM_BASE_NAME+'c')(x)
+    
+    if print_dimensions:
+        print('------- %s - identity block -------' % stage_label)
+        print('input_tensor shape:', input_tensor.shape)
+        print('x shape:', x.shape, end='\n\n')
+    
     x = tf.keras.layers.add([x, input_tensor]) # inject skip connection
     x = Activation('relu')(x)
     
     return x
 
-def conv_block(input_tensor, kernel_size, num_filters, stage_label, block_label, strides=(2, 2)):
+def conv_block(input_tensor, kernel_size, num_filters, stage_label, block_label, strides=(2, 2), print_dimensions=True):
     """ The conv block is used when input and output have different dimensions.
     
-        The conv black is differs from identity block by having convolution layer in the skip conneciton; 
+        The conv black differs from identity block by having convolution layer in the skip conneciton; 
         The conv layer in the shortcut is used to resize the input to different dimension so that the dimensions 
         match when the shortcut is added (tf.keras.layers.add) back to the main path.
     """
@@ -162,6 +168,12 @@ def conv_block(input_tensor, kernel_size, num_filters, stage_label, block_label,
     
     shortcut = Conv2D(num_filters_3, (1, 1), strides=strides, padding='valid', name=CONV_BASE_NAME+'shortcut')(input_tensor)
     shortcut = BatchNormalization(axis=-1, name=BATCH_NORM_BASE_NAME+'shortcut')(shortcut)
+        
+    if print_dimensions:
+        print('------- %s - conv block -------' % stage_label)
+        print('input_tensor shape:', input_tensor.shape)
+        print('x shape:', x.shape)
+        print('shortcut shape:', shortcut.shape, end='\n\n')
     
     x = tf.keras.layers.add([x, shortcut])
     x = Activation('relu')(x)
@@ -181,6 +193,8 @@ x = BatchNormalization(name='bn_conv_1')(x) # axis=-1 is already default
 x = Activation('relu')(x)
 x = MaxPool2D((3, 3), strides=(2, 2), name='max_pool_1')(x)
 
+# n.b. the # of filters passed to each res block is important -- if it's not correct, 
+# we will get dimension mismatch (specifically, when trying to add the skip connection)
 x = conv_block(x, 3, [64, 64, 256], stage_label=2, block_label='a', strides=(1, 1))
 x = identity_block(x, 3, [64, 64, 256], stage_label=2, block_label='b')
 x = identity_block(x, 3, [64, 64, 256], stage_label=2, block_label='c')
