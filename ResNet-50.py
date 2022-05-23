@@ -6,14 +6,14 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.6.0
+#       jupytext_version: 1.13.5
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
 #     name: python3
 # ---
 
-# + _cell_guid="b1076dfc-b9ad-4769-8c92-a6c4dae69d19" _uuid="8f2839f25d086af736a60e9eeb907d3b93b6e0e5" execution={"iopub.execute_input": "2021-06-13T15:45:22.890666Z", "iopub.status.busy": "2021-06-13T15:45:22.890341Z", "iopub.status.idle": "2021-06-13T15:45:22.897187Z", "shell.execute_reply": "2021-06-13T15:45:22.896251Z", "shell.execute_reply.started": "2021-06-13T15:45:22.890635Z"}
+# + _cell_guid="b1076dfc-b9ad-4769-8c92-a6c4dae69d19" _uuid="8f2839f25d086af736a60e9eeb907d3b93b6e0e5" pycharm={"name": "#%%\n"}
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -23,13 +23,13 @@ from tensorflow.keras.layers import (Dense, Input, Softmax, BatchNormalization, 
                                      AveragePooling2D, Add, Flatten, Dropout, Activation, ZeroPadding2D)
 from tensorflow.keras.optimizers import Adam
 
-# + execution={"iopub.execute_input": "2021-06-13T15:45:35.067440Z", "iopub.status.busy": "2021-06-13T15:45:35.067111Z", "iopub.status.idle": "2021-06-13T15:45:40.701651Z", "shell.execute_reply": "2021-06-13T15:45:40.700769Z", "shell.execute_reply.started": "2021-06-13T15:45:35.067412Z"}
+# + pycharm={"name": "#%%\n"}
 # Load data:
 
 data = tf.keras.datasets.cifar10.load_data()
 (x_train, y_train), (x_test, y_test) = data
 
-# + execution={"iopub.execute_input": "2021-06-13T15:45:40.893427Z", "iopub.status.busy": "2021-06-13T15:45:40.893120Z", "iopub.status.idle": "2021-06-13T15:45:40.904918Z", "shell.execute_reply": "2021-06-13T15:45:40.903987Z", "shell.execute_reply.started": "2021-06-13T15:45:40.893397Z"}
+# + pycharm={"name": "#%%\n"}
 print('x_train shape:', x_train.shape)
 print('x_teset shape:', x_test.shape)
 
@@ -42,7 +42,7 @@ print('# of test examples:', m_test_examples)
 image_shape = x_train.shape[1:]
 print('image shape:', image_shape)
 
-# + execution={"iopub.execute_input": "2021-06-13T15:45:43.256306Z", "iopub.status.busy": "2021-06-13T15:45:43.255975Z", "iopub.status.idle": "2021-06-13T15:45:43.263063Z", "shell.execute_reply": "2021-06-13T15:45:43.262114Z", "shell.execute_reply.started": "2021-06-13T15:45:43.256277Z"}
+# + pycharm={"name": "#%%\n"}
 LABEL_NAMES = [
     'airplane',
     'automobile',
@@ -58,7 +58,7 @@ LABEL_NAMES = [
 
 NUM_CLASSES = len(LABEL_NAMES)
 
-# + execution={"iopub.execute_input": "2021-06-13T15:45:45.890094Z", "iopub.status.busy": "2021-06-13T15:45:45.889755Z", "iopub.status.idle": "2021-06-13T15:45:47.211222Z", "shell.execute_reply": "2021-06-13T15:45:47.210358Z", "shell.execute_reply.started": "2021-06-13T15:45:45.890063Z"}
+# + pycharm={"name": "#%%\n"}
 # Process Data:
 # TODO: we subtract TRAIN mean and divide by TRAIN std on the TEST distribution as well -- why?
 mean = np.mean(x_train)
@@ -67,12 +67,12 @@ std = np.std(x_train)
 x_train = (x_train - mean) / std
 x_test = (x_test - mean) / std
 
-# + execution={"iopub.execute_input": "2021-06-13T15:45:48.901516Z", "iopub.status.busy": "2021-06-13T15:45:48.901199Z", "iopub.status.idle": "2021-06-13T15:45:48.907548Z", "shell.execute_reply": "2021-06-13T15:45:48.906490Z", "shell.execute_reply.started": "2021-06-13T15:45:48.901485Z"}
+# + pycharm={"name": "#%%\n"}
 # convert to one-hot encoding:
 y_train = tf.keras.utils.to_categorical(y_train, 10)
 y_test = tf.keras.utils.to_categorical(y_test, 10)
 
-# + execution={"iopub.execute_input": "2021-06-13T15:45:51.424702Z", "iopub.status.busy": "2021-06-13T15:45:51.424389Z", "iopub.status.idle": "2021-06-13T15:45:51.513005Z", "shell.execute_reply": "2021-06-13T15:45:51.512071Z", "shell.execute_reply.started": "2021-06-13T15:45:51.424671Z"}
+# + pycharm={"name": "#%%\n"}
 # Explore data:
 
 RAND_INDEX = np.random.randint(m_train_examples)
@@ -86,7 +86,7 @@ plt.title(img_title)
 plt.axis('off')
 plt.show()
 
-# + execution={"iopub.execute_input": "2021-06-13T15:45:56.430175Z", "iopub.status.busy": "2021-06-13T15:45:56.429815Z", "iopub.status.idle": "2021-06-13T15:45:57.137061Z", "shell.execute_reply": "2021-06-13T15:45:57.136164Z", "shell.execute_reply.started": "2021-06-13T15:45:56.430145Z"}
+# + pycharm={"name": "#%%\n"}
 # Setup data generator:
 
 BATCH_SIZE = 128
@@ -107,7 +107,7 @@ train_generator = datagen.flow(
 )
 
 
-# + execution={"iopub.execute_input": "2021-06-13T15:50:14.790258Z", "iopub.status.busy": "2021-06-13T15:50:14.789927Z", "iopub.status.idle": "2021-06-13T15:50:14.803490Z", "shell.execute_reply": "2021-06-13T15:50:14.802662Z", "shell.execute_reply.started": "2021-06-13T15:50:14.790229Z"}
+# + pycharm={"name": "#%%\n"}
 def identity_block(input_tensor, kernel_size, num_filters, stage_label, block_label, print_dimensions=True):
     """ Standard block in ResNet -- corresponds to when input activation (e.g. a[l]) has same dimension as output activation
         a[l+2].
@@ -143,7 +143,7 @@ def identity_block(input_tensor, kernel_size, num_filters, stage_label, block_la
 def conv_block(input_tensor, kernel_size, num_filters, stage_label, block_label, strides=(2, 2), print_dimensions=True):
     """ The conv block is used when input and output have different dimensions.
     
-        The conv black differs from identity block by having convolution layer in the skip conneciton; 
+        The conv black differs from identity block by having convolution layer in the skip connection;
         The conv layer in the shortcut is used to resize the input to different dimension so that the dimensions 
         match when the shortcut is added (tf.keras.layers.add) back to the main path.
     """
@@ -181,7 +181,7 @@ def conv_block(input_tensor, kernel_size, num_filters, stage_label, block_label,
     return x
 
 
-# + execution={"iopub.execute_input": "2021-06-13T15:54:05.404027Z", "iopub.status.busy": "2021-06-13T15:54:05.403688Z", "iopub.status.idle": "2021-06-13T15:54:06.262948Z", "shell.execute_reply": "2021-06-13T15:54:06.262139Z", "shell.execute_reply.started": "2021-06-13T15:54:05.403995Z"}
+# + pycharm={"name": "#%%\n"}
 # Model:
 
 num_classes=6
@@ -215,13 +215,13 @@ x = conv_block(x, 3, [512, 512, 2048], stage_label=5, block_label='a', strides=(
 x = identity_block(x, 3, [512, 512, 2048], stage_label=5, block_label='b')
 x = identity_block(x, 3, [512, 512, 2048], stage_label=5, block_label='c')
 
-#x = AveragePooling2D((2, 2), name='avg_pool')(x)
+# x = AveragePooling2D((2, 2), name='avg_pool')(x)
 x = Flatten()(x)
 x = Dense(NUM_CLASSES, activation='softmax', name='fully_connected')(x)
 
 model = Model(i, x)
 
-# + execution={"iopub.execute_input": "2021-06-13T15:54:08.838755Z", "iopub.status.busy": "2021-06-13T15:54:08.838412Z", "iopub.status.idle": "2021-06-13T16:48:44.755876Z", "shell.execute_reply": "2021-06-13T16:48:44.754972Z", "shell.execute_reply.started": "2021-06-13T15:54:08.838718Z"}
+# + pycharm={"name": "#%%\n"}
 model.compile(
     optimizer=Adam(lr=0.001,decay=0, beta_1=0.9, beta_2=0.999, epsilon=1e-08),
     loss='categorical_crossentropy',
@@ -234,14 +234,14 @@ model_history = model.fit(
     epochs=100,
     validation_data=(x_test, y_test)
 )
-# -
 
+# + [markdown] pycharm={"name": "#%% md\n"}
 # ## Model Summary:
 
-# + execution={"iopub.execute_input": "2021-06-13T17:08:00.947056Z", "iopub.status.busy": "2021-06-13T17:08:00.946637Z", "iopub.status.idle": "2021-06-13T17:08:01.031529Z", "shell.execute_reply": "2021-06-13T17:08:01.030736Z", "shell.execute_reply.started": "2021-06-13T17:08:00.947019Z"}
+# + pycharm={"name": "#%%\n"}
 model.summary()
 
-# + execution={"iopub.execute_input": "2021-06-13T17:08:13.194614Z", "iopub.status.busy": "2021-06-13T17:08:13.194291Z", "iopub.status.idle": "2021-06-13T17:08:13.519460Z", "shell.execute_reply": "2021-06-13T17:08:13.518547Z", "shell.execute_reply.started": "2021-06-13T17:08:13.194582Z"}
+# + pycharm={"name": "#%%\n"}
 plt.plot(model_history.history['accuracy'], label='accuracy')
 plt.plot(model_history.history['val_accuracy'], label='val_accuracy')
 plt.legend()
@@ -253,6 +253,6 @@ plt.plot(model_history.history['val_loss'], label='val_loss')
 plt.legend()
 plt.title('Loss')
 plt.show()
-# -
+# + pycharm={"name": "#%%\n"}
 
 
